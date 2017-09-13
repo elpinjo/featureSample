@@ -1,0 +1,47 @@
+base.version	:	1.0.0
+Bundle-Version	:	${base.version}.${tstamp}-SNAPSHOT
+junit			:	junit:junit;version=4.12.0
+
+-pom: \
+        version =                       ${versionmask;===s;${@version}}, \
+        groupid =                       com.esqr.meterwatch
+
+# Configure Repositories
+-plugin.1.Central: \
+	aQute.bnd.deployer.repository.wrapper.Plugin; \
+		location = "${build}/cache/wrapper"; \
+		reindex = true, \
+	aQute.bnd.jpm.Repository; \
+		includeStaged = true; \
+		name = Central; \
+		location = ~/.bnd/shacache; \
+		index = ${build}/central.json
+		
+-plugin.2.Local: \
+	aQute.bnd.deployer.repository.LocalIndexedRepo; \
+		name=Local; \
+		local=${workspace}/cnf/local; \
+		pretty=true
+		
+-plugin.3.Templates: \
+	aQute.bnd.deployer.repository.LocalIndexedRepo; \
+		name = Templates; \
+		pretty = true; \
+		local = ${build}/templates
+		
+-plugin.4.Maven: \
+\
+	aQute.bnd.deployer.repository.wrapper.Plugin; \
+      location   = "${build}/cache/wrapper"; \
+      reindex    = true, \
+\
+	aQute.bnd.repository.maven.provider.MavenBndRepository; \
+                snapshotUrl=http://localhost:8081/nexus/content/repositories/snapshots/; \
+                releaseUrl=http://localhost:8081/nexus/content/repositories/releases/; \
+                name="Nexus"
+
+-releaserepo: Nexus
+-baselinerepo: Release
+
+# JUnit
+#junit: org.apache.servicemix.bundles.junit; version=4.12

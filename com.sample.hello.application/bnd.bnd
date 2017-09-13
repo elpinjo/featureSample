@@ -1,0 +1,14 @@
+-buildpath: \
+	osgi.annotation;version=6.0.1,\
+	osgi.core;version=6.0,\
+	osgi.cmpn;version=6.0,\
+	com.sample.hello.provider;version=latest,\
+	org.apache.felix.gogo.runtime
+
+-testpath: \
+	${junit}
+
+javac.source: 1.8
+javac.target: 1.8
+
+Private-Package: com.sample.hello.application

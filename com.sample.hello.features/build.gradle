@@ -1,0 +1,47 @@
+buildscript {
+    dependencies {
+        classpath "com.github.lburgazzoli:gradle-karaf-plugin:0.0.47"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'com.github.lburgazzoli.karaf'
+
+
+version = rootProject.bndWorkspace.getProperty('Bundle-Version')
+
+configurations {
+  logfw
+  sample
+}
+  
+dependencies {
+	
+	logfw 'ch.qos.logback:logback-core:1.2.3'
+    logfw 'ch.qos.logback:logback-classic:1.2.3'
+    logfw 'org.slf4j:slf4j-api:1.7.7'
+   	logfw 'log4j:log4j:1.2.17'
+   	
+   	sample project(':com.sample.hello.provider')
+   	sample project(':com.sample.hello.application')
+    
+}
+
+karaf {
+  features {
+  	name = "${project.name}-${version}"
+  	xsdVersion = '1.3.0'
+  	outputFile = file("${project.buildDir}/karaf/features/${project.name}-feature.xml")
+  	includeProject = false;
+  	
+  	feature {
+  		name        = 'hello'
+  		description = 'Hello World'
+  		
+  		configurations 'logfw', 'sample'
+       	
+  		feature 'scr'
+   	}
+  }
+}
