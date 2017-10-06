@@ -1,47 +1,37 @@
 base.version	:	1.0.0
-Bundle-Version	:	${base.version}.${tstamp}-SNAPSHOT
+Bundle-Version	:	${base.version}.${tstamp}
 junit			:	junit:junit;version=4.12.0, org.hamcrest:hamcrest-core
 
--pom: \
-        version =                       ${versionmask;===s;${@version}}, \
-        groupid =                       com.esqr.meterwatch
+release-version			${base.version}-SNAPSHOT
+-pom:					version = ${release-version
+-groupid:				com.sample.hello
 
 # Configure Repositories
--plugin.1.Central: \
-	aQute.bnd.deployer.repository.wrapper.Plugin; \
-		location = "${build}/cache/wrapper"; \
-		reindex = true, \
-	aQute.bnd.jpm.Repository; \
-		includeStaged = true; \
-		name = Central; \
-		location = ~/.bnd/shacache; \
-		index = ${build}/central.json
-		
--plugin.2.Local: \
-	aQute.bnd.deployer.repository.LocalIndexedRepo; \
-		name=Local; \
-		local=${workspace}/cnf/local; \
-		pretty=true
-		
--plugin.3.Templates: \
-	aQute.bnd.deployer.repository.LocalIndexedRepo; \
-		name = Templates; \
-		pretty = true; \
-		local = ${build}/templates
-		
--plugin.4.Maven: \
+-plugin.3.nexus: \
 \
-	aQute.bnd.deployer.repository.wrapper.Plugin; \
+	aQute.bnd.repository.maven.provider.MavenBndRepository; \
+		snapshotUrl=http://localhost:8081/nexus/content/repositories/snapshots/; \
+		releaseUrl=http://localhost:8081/nexus/content/repositories/releases/; \
+		name="Nexus"
+				
+-plugin.4.MvnCentral = \
+\
+   aQute.bnd.deployer.repository.wrapper.Plugin; \
       location   = "${build}/cache/wrapper"; \
       reindex    = true, \
 \
-	aQute.bnd.repository.maven.provider.MavenBndRepository; \
-                snapshotUrl=http://localhost:8081/nexus/content/repositories/snapshots/; \
-                releaseUrl=http://localhost:8081/nexus/content/repositories/releases/; \
-                name="Nexus"
+   aQute.bnd.repository.maven.provider.MavenBndRepository; \
+      releaseUrl = https://repo.maven.apache.org/maven2/; \
+      name       = MvnCentral, \
+\
+   aQute.bnd.repository.maven.provider.MavenBndRepository; \
+   	  snapshotUrl = https://oss.sonatype.org/content/repositories/osgi-snapshots/; \
+      releaseUrl = https://oss.sonatype.org/content/repositories/osgi/; \
+      name       = OSGI-Snapshots
+      
+-plugin.6.Local: \
+  aQute.bnd.repository.maven.provider.MavenBndRepository; \
+        name   =    Local
 
 -releaserepo: Nexus
--baselinerepo: Release
-
-# JUnit
-#junit: org.apache.servicemix.bundles.junit; version=4.12
+#-baselinerepo: Local
